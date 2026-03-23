@@ -1,0 +1,24 @@
+{
+  "name": "wheres-who-server",
+  "version": "1.0.0",
+  "description": "wheres waldo full stack web applicatiion",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yashulilhare/wheres-who-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yashulilhare/wheres-who-server/issues"
+  },
+  "homepage": "https://github.com/yashulilhare/wheres-who-server#readme"
+}
