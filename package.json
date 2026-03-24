@@ -2,13 +2,15 @@
   "name": "wheres-who-server",
   "version": "1.0.0",
   "description": "wheres waldo full stack web applicatiion",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "lib": "lib",
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "populate": "node db/populateDB.js"
   },
   "repository": {
     "type": "git",

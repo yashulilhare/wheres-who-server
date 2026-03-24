@@ -1,13 +1,11 @@
-import {Router} from 'express'
+import { Router } from "express";
 
-const leaderboardRouter = Router()
+import { getLeaderboard, postLeaderboard } from "../controllers/leaderboard.js";
 
-leaderboardRouter.get('/', (req,res,next) => {
-    res.send('got to leaderboard')
-})
+const leaderboardRouter = Router();
 
-leaderboardRouter.post('/', (req,res,next) => {
-    res.send('posted to leaderboard')
-})
+leaderboardRouter.get("/", getLeaderboard);
 
-export default leaderboardRouter
+leaderboardRouter.post("/", postLeaderboard);
+
+export default leaderboardRouter;
