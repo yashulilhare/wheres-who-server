@@ -15,6 +15,7 @@ datasource db {
 model User {
   id       String   @id @default(cuid())
   username String   @unique
+  password String
   records  Record[]
 }
 
@@ -42,8 +43,8 @@ model Record {
 model Character {
   id        String  @id @default(cuid())
   name      String?
-  xposition Int
-  yposition Int
+  xposition Float
+  yposition Float
 
   modeId Int
   mode   Mode @relation(fields: [modeId], references: [id], onDelete: Cascade)
