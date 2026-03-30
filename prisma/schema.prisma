@@ -20,8 +20,13 @@ model User {
 }
 
 model Mode {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  // size of image used for each mode (in pixel)
+  xLength Int
+  yLength Int
+
   records    Record[]
   characters Character[]
 }
@@ -41,8 +46,13 @@ model Record {
 }
 
 model Character {
-  id        String  @id @default(cuid())
-  name      String?
+  id   String  @id @default(cuid())
+  name String?
+
+  // imageCode is number-code for character-image stored with the same name on hosting provider, ex. 1.png ~ imageCode = 1
+  imageCode Int
+
+  // 
   xposition Float
   yposition Float
 
