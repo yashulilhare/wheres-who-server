@@ -8,7 +8,7 @@ export const getUser = async (req, res, next) => {
     const user = await db.getUserById(userId);
     if (user === null) {
       return res.status(404).json({
-        message: "user did not found!",
+        message: "user not found!",
         result: "not-found",
       });
     }

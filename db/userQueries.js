@@ -12,14 +12,24 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const createUser = async (username) => {
+const getUserByUsername = async (username) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      username,
+    },
+  });
+  return user;
+};
+
+const createUser = async (username, password) => {
   const user = await prisma.user.create({
     data: {
       username: username,
+      password: password,
     },
   });
 
   return user;
 };
 
-export default { getUserById, createUser };
+export default { getUserById, createUser, getUserByUsername };
