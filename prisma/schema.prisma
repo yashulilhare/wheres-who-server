@@ -13,10 +13,11 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(cuid())
-  username String   @unique
-  password String
-  records  Record[]
+  id          String       @id @default(cuid())
+  username    String       @unique
+  password    String
+  records     Record[]
+  activeGames ActiveGame[]
 }
 
 model Mode {
@@ -27,8 +28,9 @@ model Mode {
   xLength Int
   yLength Int
 
-  records    Record[]
-  characters Character[]
+  records     Record[]
+  characters  Character[]
+  activeGames ActiveGame[]
 }
 
 model Record {
@@ -58,4 +60,21 @@ model Character {
 
   modeId Int
   mode   Mode @relation(fields: [modeId], references: [id], onDelete: Cascade)
+}
+
+model ActiveGame {
+  id     String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  modeId Int
+  mode   Mode   @relation(fields: [modeId], references: [id])
+  
+  characterStatus String
+  innocentKills Int
+  lastTimerScore Int
+  charactersFound Int
+  createdAt DateTime @default(now())
+  lastTimeCheck DateTime @updatedAt()
 }
