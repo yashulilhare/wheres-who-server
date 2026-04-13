@@ -31,6 +31,8 @@ model Mode {
   records     Record[]
   characters  Character[]
   activeGames ActiveGame[]
+
+  @@index([name])
 }
 
 model Record {
@@ -48,8 +50,8 @@ model Record {
 }
 
 model Character {
-  id   String  @id @default(cuid())
-  name String?
+  id   String @id @default(cuid())
+  name String
 
   // imageCode is number-code for character-image stored with the same name on hosting provider, ex. 1.png ~ imageCode = 1
   imageCode Int
@@ -63,18 +65,20 @@ model Character {
 }
 
 model ActiveGame {
-  id     String @id @default(uuid())
+  id String @id @default(uuid())
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   modeId Int
-  mode   Mode   @relation(fields: [modeId], references: [id])
-  
-  characterStatus String
-  innocentKills Int
-  lastTimerScore Int
+  mode   Mode @relation(fields: [modeId], references: [id], onDelete: Cascade)
+
+  characterData   Json
+  innocentKills   Int
+  lastTimerScore  Int
   charactersFound Int
-  createdAt DateTime @default(now())
-  lastTimeCheck DateTime @updatedAt()
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt()
+
+  @@index([userId])
 }
