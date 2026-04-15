@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 
@@ -11,7 +14,14 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+
+const frontEnd = process.env.FRONTEND_URL;
+app.use(
+  cors({
+    origin: frontEnd,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  }),
+);
 
 app.use("/user", authMiddleware, userRouter);
 app.use("/leaderboard", authMiddleware, leaderboardRouter);

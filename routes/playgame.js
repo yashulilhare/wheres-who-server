@@ -1,9 +1,8 @@
 import { Router } from "express";
+import controller from "./../controllers/playgame.js";
 
 const playgameRouter = Router();
 
-playgameRouter.post("/start", (req, res, next) => {
-  res.send("okay got start");
-});
+playgameRouter.post("/start", controller.startGame);
 
-export default playgameRouter
+export default playgameRouter;
