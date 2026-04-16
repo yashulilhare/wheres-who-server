@@ -78,6 +78,7 @@ const increaseInnocentKill = async (gameId, increasedKills, timerScore) => {
     },
     select: {
       id: true,
+      gameState: true,
       modeId: true,
       innocentKills: true,
       lastTimerScore: true,
@@ -104,6 +105,7 @@ const updateCharFound = async ({
       modeId: true,
       characterData: true,
       lastTimerScore: true,
+      gameState: true,
     },
   });
   return updated;

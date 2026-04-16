@@ -39,19 +39,13 @@ WHERE "userId" = ${userId};
 };
 // const getLeaderBoardForMode = async () => {};
 
-const createRecord = async (userId, modeId, duration) => {
+const createRecord = async (userId, modeId, duration, innocentKills) => {
   const data = await prisma.record.create({
     data: {
       userId,
       modeId,
       duration,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
-        },
-      },
+      innocentKills,
     },
   });
 

@@ -1,4 +1,5 @@
 import db from "./../db/activeGamequeries.js";
+import dbLeaderboard from "./../db/leaderboardQueries.js";
 import getRandomChar from "../utils/getRandomChar.js";
 import getRefreshToken from "../utils/getRefreshToken.js";
 
@@ -119,6 +120,7 @@ const handleAttempt = async (req, res, next) => {
       { x: character.position.x, y: character.position.y },
       { x, y },
     );
+    //todo: remove console
     console.log(match);
     if (!match) {
       console.log(`increaseInnocentKill`);
@@ -169,6 +171,7 @@ const handleAttempt = async (req, res, next) => {
       if (foundCount < 3) {
         return res.json({
           id: updateGame.id,
+          gameState: updateGame.gameState,
           modeId: updateGame.modeId,
           lastTimerScore: updateGame.lastTimerScore,
           attemptResult: "SUCCESS",
@@ -178,7 +181,34 @@ const handleAttempt = async (req, res, next) => {
       }
 
       // todo: make them win the game here; for now just continue
-      res.send("Yet to write logic for game end");
+      if (foundCount >= 3) {
+        res.json({
+          id: updateGame.id,
+          username: user.username,
+          gameState: "COMPLETED",
+          modeId: updateGame.modeId,
+          lastTimerScore: updateGame.lastTimerScore,
+          attemptResult: "SUCCESS",
+          message: `Great job. You caught ${charName}. You caught them all.`,
+          characters: removePos,
+        });
+
+        await db.deleteGame(updateGame.id).then(() => {
+          console.log(`Removed game with id: ${updateGame.id}`);
+        });
+
+        // store record in Record
+        await dbLeaderboard
+          .createRecord(
+            gameData.userId,
+            modeId,
+            updateGame.lastTimerScore,
+            gameData.innocentKills,
+          )
+          .then(() => {
+            console.log(`Record added for  game with id: ${updateGame.id}`);
+          });
+      }
     }
   } catch (err) {
     console.error(err);
