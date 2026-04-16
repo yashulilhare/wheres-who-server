@@ -14,6 +14,15 @@ const createGame = async ({ userId, modeId, characters }) => {
   return createdGame;
 };
 
+const getGameById = async (gameId) => {
+  const gameData = await prisma.activeGame.findFirst({
+    where: {
+      id: gameId,
+    },
+  });
+  return gameData;
+};
+
 const getCharacters = async (modeName) => {
   const characters = await prisma.mode.findFirst({
     where: {
@@ -58,4 +67,54 @@ const deleteGame = async (gameId) => {
   return deleted;
 };
 
-export default { createGame, getActiveGames, getCharacters, deleteGame };
+const increaseInnocentKill = async (gameId, increasedKills, timerScore) => {
+  const updated = await prisma.activeGame.update({
+    where: {
+      id: gameId,
+    },
+    data: {
+      innocentKills: increasedKills,
+      lastTimerScore: timerScore,
+    },
+    select: {
+      id: true,
+      modeId: true,
+      innocentKills: true,
+      lastTimerScore: true,
+    },
+  });
+  return updated;
+};
+
+const updateCharFound = async ({
+  gameId,
+  characters,
+  totalFound,
+  timerScore,
+}) => {
+  const updated = await prisma.activeGame.update({
+    where: { id: gameId },
+    data: {
+      characterData: characters,
+      charactersFound: totalFound,
+      lastTimerScore: timerScore,
+    },
+    select: {
+      id: true,
+      modeId: true,
+      characterData: true,
+      lastTimerScore: true,
+    },
+  });
+  return updated;
+};
+
+export default {
+  createGame,
+  getGameById,
+  getActiveGames,
+  getCharacters,
+  deleteGame,
+  increaseInnocentKill,
+  updateCharFound,
+};
