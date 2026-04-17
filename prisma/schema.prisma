@@ -47,7 +47,7 @@ model Record {
   modeId Int
   mode   Mode @relation(fields: [modeId], references: [id], onDelete: Cascade)
 
-  @@index([modeId, duration, createdAt])
+  @@index([modeId, duration, innocentKills])
 }
 
 model Character {

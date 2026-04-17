@@ -52,8 +52,30 @@ const createRecord = async (userId, modeId, duration, innocentKills) => {
   return data;
 };
 
+const getTopFive = async (modeId) => {
+  const data = await prisma.record.findMany({
+    where: {
+      modeId: modeId,
+    },
+    orderBy: [{ duration: "asc" }, { innocentKills: "asc" }],
+    take: 5,
+    select: {
+      id: true,
+      innocentKills: true,
+      duration: true,
+      user: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
+  return data;
+};
+
 export default {
   getAllLeaderboard,
   getUserHighestRanks,
   createRecord,
+  getTopFive,
 };

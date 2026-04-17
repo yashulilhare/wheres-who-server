@@ -120,8 +120,7 @@ const handleAttempt = async (req, res, next) => {
       { x: character.position.x, y: character.position.y },
       { x, y },
     );
-    //todo: remove console
-    console.log(match);
+
     if (!match) {
       console.log(`increaseInnocentKill`);
       const updatedData = await db.increaseInnocentKill(
@@ -137,8 +136,6 @@ const handleAttempt = async (req, res, next) => {
     }
 
     if (match) {
-      console.log("update char data");
-
       const updatedCharacters = await gameData.characterData.map((char) => {
         if (char.id === character.id)
           return { ...char, found: true, foundDuration: timerScore };
@@ -180,8 +177,8 @@ const handleAttempt = async (req, res, next) => {
         });
       }
 
-      // todo: make them win the game here; for now just continue
       if (foundCount >= 3) {
+        const topFive = await dbLeaderboard.getTopFive(updateGame.modeId);
         res.json({
           id: updateGame.id,
           username: user.username,
@@ -191,11 +188,13 @@ const handleAttempt = async (req, res, next) => {
           attemptResult: "SUCCESS",
           message: `Great job. You caught ${charName}. You caught them all.`,
           characters: removePos,
+          topFive: topFive,
         });
-
-        await db.deleteGame(updateGame.id).then(() => {
-          console.log(`Removed game with id: ${updateGame.id}`);
-        });
+        if (updateGame.id) {
+          await db.deleteGame(updateGame.id).then(() => {
+            console.log(`Removed game with id: ${updateGame.id}`);
+          });
+        }
 
         // store record in Record
         await dbLeaderboard
