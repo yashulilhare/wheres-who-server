@@ -5,7 +5,6 @@ import getRefreshToken from "../utils/getRefreshToken.js";
 
 const startGame = async (req, res, next) => {
   const user = req.user;
-
   if (!req.body || !req.body.modeName) {
     return res.status(400).json({
       message: "Mode not selected.",
@@ -13,7 +12,7 @@ const startGame = async (req, res, next) => {
   }
   const { modeName } = req.body;
   try {
-    const prevGames = await db.getActiveGames(user.id);
+    const deleted = await db.deleteGame(user.id);
     const modeData = await db.getCharacters(modeName);
 
     if (!modeData) {
@@ -68,13 +67,6 @@ const startGame = async (req, res, next) => {
     } else {
       res.status(403).json({
         message: "Couldn't start game",
-      });
-    }
-
-    if (prevGames.length > 0) {
-      // todo: do bulk delete than loop queries
-      prevGames.map((game) => {
-        db.deleteGame(game.id);
       });
     }
   } catch (err) {

@@ -57,10 +57,10 @@ const getActiveGames = async (userId) => {
   return games;
 };
 
-const deleteGame = async (gameId) => {
-  const deleted = await prisma.activeGame.delete({
+const deleteGame = async (userId) => {
+  const deleted = await prisma.activeGame.deleteMany({
     where: {
-      id: gameId,
+      id: userId,
     },
   });
 
