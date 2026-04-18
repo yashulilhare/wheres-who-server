@@ -16,12 +16,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const frontEnd = process.env.FRONTEND_URL;
-app.use(
-  cors({
-    origin: frontEnd,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  }),
-);
+
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: frontEnd,
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   }),
+// );
 
 app.use("/user", authMiddleware, userRouter);
 app.use("/leaderboard", authMiddleware, leaderboardRouter);

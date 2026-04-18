@@ -1,34 +1,32 @@
 import db from "./../db/leaderboardQueries.js";
 
 export const getLeaderboard = async (req, res, next) => {
-  const { userId } = req.body;
+  console.log("got");
+  const user = req.user;
   try {
     // const leaderboard = await db.getAllLeaderboard();
     const [leaderboard, userRanks] = await Promise.all([
       db.getAllLeaderboard(),
-      db.getUserHighestRanks(userId),
+      db.getUserHighestRanks(user.id),
     ]);
 
-    return res.json({ leaderboard, userRanks });
+    const formatted = await leaderboard.map((mode) => {
+      const userRank = userRanks.find((rank) => mode.id === rank.modeId);
+      return {
+        ...mode,
+        userRank: userRank
+          ? {
+              ...userRank,
+              bestRank: Number(userRank.bestRank),
+              username: user.username,
+            }
+          : null,
+      };
+    });
+
+    return res.json(formatted);
   } catch (err) {
     res.status(400).json(err);
     next(err);
   }
 };
-
-export const postLeaderboard = async (req, res, next) => {
-  const { userId, duration, modeId } = req.body;
-  try {
-    const record = await db.createRecord(
-      userId,
-      Number(modeId),
-      Number(duration),
-    );
-    return res.json(record);
-  } catch (err) {
-    res.status(400).json(err);
-    next(err);
-  }
-};
-
-

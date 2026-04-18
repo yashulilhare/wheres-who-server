@@ -2,14 +2,29 @@ import { prisma } from "./../lib/prisma.js";
 
 const getAllLeaderboard = async () => {
   const leaderboard = await prisma.mode.findMany({
-    include: {
+    select: {
+      id: true,
+      name: true,
       records: {
-        orderBy: {
-          duration: "asc",
+        select: {
+          id: true,
+          duration: true,
+          innocentKills: true,
+          user: {
+            select: {
+              username: true,
+            },
+          },
         },
-        include: {
-          user: true,
-        },
+        orderBy: [
+          {
+            duration: "asc",
+          },
+          {
+            innocentKills: "asc",
+          },
+        ],
+        take: 7,
       },
     },
   });
@@ -18,26 +33,30 @@ const getAllLeaderboard = async () => {
 };
 
 const getUserHighestRanks = async (userId) => {
-  const userRanks = await prisma.$queryRaw`
-SELECT "modeId", "duration", "createdAt", "rank"
-FROM (
-  SELECT 
-    "userId", 
-    "modeId", 
-    "duration",
-    "createdAt",
-    ROW_NUMBER() OVER (
-      PARTITION BY "modeId" 
-      ORDER BY "duration" ASC, "createdAt" ASC
-    ) as "rank"
-  FROM "Record"
-) AS ranked_records
-WHERE "userId" = ${userId};
+  const result = await prisma.$queryRaw`
+  SELECT "modeId", "duration", "innocentKills", rank as "bestRank"
+  FROM (
+    SELECT 
+      "userId",
+      "modeId",
+      "duration",
+      "innocentKills",
+      RANK() OVER (
+        PARTITION BY "modeId"
+        ORDER BY duration ASC, "innocentKills" ASC
+      ) as rank,
+      ROW_NUMBER() OVER (
+        PARTITION BY "modeId", "userId"
+        ORDER BY duration ASC, "innocentKills" ASC
+      ) as rn
+    FROM "Record"
+  ) ranked
+  WHERE "userId" = ${userId}
+    AND rn = 1
+  ORDER BY "modeId";
 `;
-
-  return userRanks;
+  return result;
 };
-// const getLeaderBoardForMode = async () => {};
 
 const createRecord = async (userId, modeId, duration, innocentKills) => {
   const data = await prisma.record.create({
