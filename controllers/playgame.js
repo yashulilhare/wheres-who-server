@@ -123,7 +123,7 @@ const handleAttempt = async (req, res, next) => {
       return res.json({
         ...updatedData,
         attemptResult: "FAILED",
-        message: `Oh,no, that's not ${charName}.`,
+        message: `Oh,no, that's not ${charName} !`,
       });
     }
 
@@ -178,7 +178,7 @@ const handleAttempt = async (req, res, next) => {
           modeId: updateGame.modeId,
           lastTimerScore: updateGame.lastTimerScore,
           attemptResult: "SUCCESS",
-          message: `Great job. You caught ${charName}. You caught them all.`,
+          message: `Great job. You found ${charName}. You found them all.`,
           characters: removePos,
           topFive: topFive,
         });
