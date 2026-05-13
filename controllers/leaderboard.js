@@ -1,7 +1,6 @@
 import db from "./../db/leaderboardQueries.js";
 
 export const getLeaderboard = async (req, res, next) => {
-  console.log("got");
   const user = req.user;
   try {
     // const leaderboard = await db.getAllLeaderboard();

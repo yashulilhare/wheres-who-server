@@ -17,20 +17,19 @@ app.use(express.json());
 
 const frontEnd = process.env.FRONTEND_URL;
 
-app.use(cors());
-// app.use(
-//   cors({
-//     origin: frontEnd,
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   }),
-// );
+app.use(
+  cors({
+    origin: frontEnd,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  }),
+);
 
 app.use("/user", authMiddleware, userRouter);
 app.use("/leaderboard", authMiddleware, leaderboardRouter);
 app.use("/auth", authRouter);
 app.use("/playgame", authMiddleware, playgameRouter);
 app.use("/me", (req, res, next) => {
-  res.json({ message: "got" });
+  res.json({ message: "Server Started" });
 });
 
 // Catch wrong route requests

@@ -10,6 +10,7 @@ const startGame = async (req, res, next) => {
       message: "Mode not selected.",
     });
   }
+
   const { modeName } = req.body;
   try {
     const deleted = await db.deleteGame(user.id);
@@ -62,7 +63,8 @@ const startGame = async (req, res, next) => {
             found: false,
           })),
         },
-        message: "Game started. Find all the criminals.",
+        message: "Mission started! Be quick and find them all !...",
+        actionCode: "START",
       });
     } else {
       res.status(403).json({
@@ -114,7 +116,6 @@ const handleAttempt = async (req, res, next) => {
     );
 
     if (!match) {
-      console.log(`increaseInnocentKill`);
       const updatedData = await db.increaseInnocentKill(
         gameId,
         gameData.innocentKills + 1,
@@ -123,7 +124,8 @@ const handleAttempt = async (req, res, next) => {
       return res.json({
         ...updatedData,
         attemptResult: "FAILED",
-        message: `Oh,no, that's not ${charName} !`,
+        message: `No! that's not ${charName} , keep looking!`,
+        actionCode: "FAILED",
       });
     }
 
@@ -164,8 +166,9 @@ const handleAttempt = async (req, res, next) => {
           modeId: updateGame.modeId,
           lastTimerScore: updateGame.lastTimerScore,
           attemptResult: "SUCCESS",
-          message: `Woow, you caught ${charName}`,
+          message: `Great, you caught ${charName}`,
           characters: removePos,
+          actionCode: "SUCCESS",
         });
       }
 
@@ -181,6 +184,7 @@ const handleAttempt = async (req, res, next) => {
           message: `Great job. You found ${charName}. You found them all.`,
           characters: removePos,
           topFive: topFive,
+          actionCode: "GAMEEND",
         });
         if (updateGame.id) {
           await db.deleteGame(updateGame.id).then(() => {
