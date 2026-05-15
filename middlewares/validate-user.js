@@ -18,6 +18,6 @@ export const validateUser = [
       minNumbers: 1,
     })
     .withMessage(
-      "password should contain at least 1 lowercase, 1 uppercase, 1 number. And should be more than 5 character",
+      "password should contain at least 1 lowercase, 1 uppercase, 1 number, 1 symbol. And should be more than 5 character",
     ),
 ];
